@@ -16,6 +16,7 @@ const reviews = require('./routes/reviews');
 //	useNewUrlParser: true,
 //	useCreateIndex: true,
 //	useUnifiedTopology: true
+//  useFindAndModify: false
 //});
 
 mongoose
@@ -42,6 +43,7 @@ app.set('views', path.join(__dirname, 'views'));
 //保证可以返回req.body
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/campgrounds', campgrounds);
 app.use('/campgrounds/:id/reviews', reviews);
