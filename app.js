@@ -4,15 +4,13 @@ const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 //用于服务端也能准确无误的接受新创建和更改后的cambground，如果信息不完整，将会抛出错误。见post新创建， serve side validation with Joi
 const Joi = require('joi');
-const { campgroundSchema, reviewSchema } = require('./schemas.js');
-const catchAsync = require('./utils/catchAsync');
+
 const ExpressError = require('./utils/ExpressError');
 //用于制作虚假的put请求
 const methodOverride = require('method-override');
-const Campground = require('./models/campground');
-const Review = require('./models/review');
 
 const campgrounds = require('./routes/campgrounds');
+const reviews = require('./routes/reviews');
 
 //mongoose.connect('mongoose://localhost:27017/yelp-camp', {
 //	useNewUrlParser: true,
@@ -36,73 +34,21 @@ db.once('open', () => {
 	console.log('Database connected!');
 });
 
-//创建一个schema midlleware 以便多处可以使用,其他地方只需要插入这个函数名称即可。
-const validateCampground = (req, res, next) => {
-	//此版块也可以放置在一个单独的文件中，不然此文件杂乱。存在文件：schemas.js中
-	//const campgroundSchema = Joi.object({
-	//	campground: Joi.object({
-	//		title: Joi.string().required(),
-	//		price: Joi.number().required().min(0),
-	//		image: Joi.string().required(),
-	//		location: Joi.string().required(),
-	//		description: Joi.string().required()
-	//	}).required()
-	//});
-	const { error } = campgroundSchema.validate(req.body);
-	if (error) {
-		const msg = error.detalis.map((el) => el.message).join(',');
-		throw new ExpressError(msg, 400);
-	} else {
-		next();
-	}
-};
-
-const validateReview = (req, res, next) => {
-	const { error } = reviewSchema.validate(req.body);
-	if (error) {
-		const msg = error.detalis.map((el) => el.message).join(',');
-		throw new ExpressError(msg, 400);
-	} else {
-		next();
-	}
-};
-
 const app = express();
+
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 //保证可以返回req.body
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
 app.use('/campgrounds', campgrounds);
+app.use('/campgrounds/:id/reviews', reviews);
 
 app.get('/', (req, res) => {
 	res.render('home');
 });
-
-app.post(
-	'/campgrounds/:id/reviews',
-	validateReview,
-	catchAsync(async (req, res) => {
-		const campground = await Campground.findById(req.params.id);
-		const review = new Review(req.body.review);
-		campground.reviews.push(review);
-		await review.save();
-		await campground.save();
-		res.redirect(`/campgrounds/${campground._id}`);
-	})
-);
-
-app.delete(
-	'/campgrounds/:id/reviews/:reviewId',
-	catchAsync(async (req, res) => {
-		const { id, reviewId } = req.params;
-		//$pull 根据reviewId，将这条review从全部的reviews中拉出去。来自mongo。
-		await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-		await Review.findByIdAndDelete(reviewId);
-		res.redirect(`/campgrounds/${id}`);
-	})
-);
 
 //设置默认回复给其他不存在的路径
 app.all('*', (req, res, next) => {
@@ -121,5 +67,3 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
 	console.log('Listen on port 3000');
 });
-
-//test for github
