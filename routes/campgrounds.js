@@ -6,19 +6,10 @@ const { campgroundSchema } = require('../schemas.js');
 const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
 
+
 //创建一个schema midlleware 以便多处可以使用,其他地方只需要插入这个函数名称即可。
 const validateCampground = (req, res, next) => {
 	const { error } = campgroundSchema.validate(req.body);
-	if (error) {
-		const msg = error.detalis.map((el) => el.message).join(',');
-		throw new ExpressError(msg, 400);
-	} else {
-		next();
-	}
-};
-
-const validateReview = (req, res, next) => {
-	const { error } = reviewSchema.validate(req.body);
 	if (error) {
 		const msg = error.detalis.map((el) => el.message).join(',');
 		throw new ExpressError(msg, 400);
