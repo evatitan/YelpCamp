@@ -16,6 +16,11 @@ router.post(
 			const { email, username, password } = req.body;
 			const user = new User({ email, username });
 			const registerUser = await User.register(user, password);
+			req.login(registerUser, (err) => {
+				if (err) return next(err);
+				req.flash('success', 'welcome to Yelp Camp!');
+				res.redirect('/campgrounds');
+			});
 			req.flash('success', 'welcome to yelpcamp');
 			res.redirect('/campgrounds');
 		} catch (e) {
@@ -29,10 +34,17 @@ router.get('/login', (req, res) => {
 	res.render('users/login');
 	//req.flash('success', 'welcome back');
 });
+
 // 使用了passport的一个middleware
 router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
 	//res.render('users/login');
 	req.flash('success', 'Welcome to back');
+	res.redirect('/campgrounds');
+});
+
+router.get('/logout', (req, res) => {
+	req.logout();
+	req.flash('success', 'Goodbye!');
 	res.redirect('/campgrounds');
 });
 
