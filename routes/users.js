@@ -25,4 +25,15 @@ router.post(
 	})
 );
 
+router.get('/login', (req, res) => {
+	res.render('users/login');
+	//req.flash('success', 'welcome back');
+});
+// 使用了passport的一个middleware
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+	//res.render('users/login');
+	req.flash('success', 'Welcome to back');
+	res.redirect('/campgrounds');
+});
+
 module.exports = router;
