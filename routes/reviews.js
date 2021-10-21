@@ -1,7 +1,7 @@
 const express = require('express');
 // mergeParams: true 是为了较为广泛的接受路径
 const router = express.Router({ mergeParams: true });
-const { validateReview, isLoggedIn } = require('../middleware');
+const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 
@@ -26,6 +26,8 @@ router.post(
 
 router.delete(
 	'/:reviewId',
+	isLoggedIn,
+	isReviewAuthor,
 	catchAsync(async (req, res) => {
 		const { id, reviewId } = req.params;
 		//$pull 根据reviewId，将这条review从全部的reviews中拉出去。来自mongo。

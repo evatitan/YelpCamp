@@ -38,7 +38,15 @@ router.get(
 	'/:id',
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
-		const campground = await Campground.findById(id).populate('reviews').populate('author');
+		//因为创建campground的author和创建review的author是不一样的，所以需要分开进行populate。
+		const campground = await Campground.findById(id)
+			.populate({
+				path: 'reviews',
+				populate: {
+					path: 'author'
+				}
+			})
+			.populate('author');
 		console.log(campground);
 		if (!campground) {
 			req.flash('error', 'Cannot find that campground!');
