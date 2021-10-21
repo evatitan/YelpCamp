@@ -1,7 +1,7 @@
 const express = require('express');
 // mergeParams: true 是为了较为广泛的接受路径
 const router = express.Router({ mergeParams: true });
-const { validateReview } = require('../middleware');
+const { validateReview, isLoggedIn } = require('../middleware');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 
@@ -10,10 +10,12 @@ const catchAsync = require('../utils/catchAsync');
 
 router.post(
 	'/',
+	isLoggedIn,
 	validateReview,
 	catchAsync(async (req, res) => {
 		const campground = await Campground.findById(req.params.id);
 		const review = new Review(req.body.review);
+		review.author = req.user._id;
 		campground.reviews.push(review);
 		await review.save();
 		await campground.save();
