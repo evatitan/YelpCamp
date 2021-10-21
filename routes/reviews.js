@@ -1,24 +1,12 @@
 const express = require('express');
 // mergeParams: true 是为了较为广泛的接受路径
 const router = express.Router({ mergeParams: true });
-
-const ExpressError = require('../utils/ExpressError');
-const catchAsync = require('../utils/catchAsync');
-
+const { validateReview } = require('../middleware');
 const Campground = require('../models/campground');
 const Review = require('../models/review');
 
-const { reviewSchema } = require('../schemas.js');
-
-const validateReview = (req, res, next) => {
-	const { error } = reviewSchema.validate(req.body);
-	if (error) {
-		const msg = error.detalis.map((el) => el.message).join(',');
-		throw new ExpressError(msg, 400);
-	} else {
-		next();
-	}
-};
+const ExpressError = require('../utils/ExpressError');
+const catchAsync = require('../utils/catchAsync');
 
 router.post(
 	'/',

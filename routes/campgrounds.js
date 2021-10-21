@@ -1,22 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
-const { campgroundSchema } = require('../schemas.js');
-const { isLoggedIn } = require('../middleware');
+
+const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
 
 const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
-
-//创建一个schema midlleware 以便多处可以使用,其他地方只需要插入这个函数名称即可。
-const validateCampground = (req, res, next) => {
-	const { error } = campgroundSchema.validate(req.body);
-	if (error) {
-		const msg = error.detalis.map((el) => el.message).join(',');
-		throw new ExpressError(msg, 400);
-	} else {
-		next();
-	}
-};
 
 router.get(
 	'/',
@@ -62,6 +51,7 @@ router.get(
 router.get(
 	'/:id/edit',
 	isLoggedIn,
+	isAuthor,
 	catchAsync(async (req, res) => {
 		const campground = await Campground.findById(req.params.id);
 		if (!campground) {
@@ -75,16 +65,13 @@ router.get(
 router.put(
 	'/:id',
 	isLoggedIn,
+	isAuthor,
 	validateCampground,
 	catchAsync(async (req, res) => {
 		const { id } = req.params;
-		const campground = await Campground.findById(id);
-		if (!campground.author.equals(req.user._id)) {
-			req.flash('error', 'You do not have permission to do that!');
-			return res.redirect(`/campgrounds/${id}`);
-		}
+
 		//find the campground and check if the id is the same
-		const camp = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
+		const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
 		req.flash('success', 'Successfully updated campground!');
 		res.redirect(`/campgrounds/${campground._id}`);
 	})
@@ -93,6 +80,7 @@ router.put(
 router.delete(
 	'/:id',
 	isLoggedIn,
+	isAuthor,
 	catchAsync(async (req, res) => {
 		const id = req.params.id;
 		await Campground.findByIdAndDelete(id);
