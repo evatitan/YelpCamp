@@ -12,6 +12,8 @@
                 <li class="list-group-item "> Submitted by <%= campground.author.username %> </li>  
                 <li class="list-group-item"> $<%= campground.price %>/night</li>  
             </ul>
+            <%# 验证当前campground是否为作者本人创建，若是，作者有权利进行修改或者删除campground。若不是，则只能查看。%>
+            <% if(currentUser && campground.author.equals(currentUser._id)) { %> 
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/campgrounds/<%= campground._id%>/edit">Edit</a>
                 <form class="d-inline" action="/campgrounds/<%= campground._id%>?_method=DELETE" method="POST"">
@@ -19,6 +21,7 @@
                  </form> 
                  <a class="card-link btn btn-primary" href="/campgrounds/">Back Campgrounds</a>
             </div>
+            <% } %> 
         </div>
     </div>
     <div class="col-6">
