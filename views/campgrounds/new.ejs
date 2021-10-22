@@ -12,16 +12,16 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="location">Location</label>
+                    <label class="form-label custom-file-label" for="location">Location</label>
                     <input class="form-control" type="text" id="location" name="campground[location]" required>
                     <div class="valid-feedback">
                         That's right!
                     </div>
                 </div>
-                
+
                  <!-- multiple 是为了能够接受多个文件，使用了upload.array-->
-                <input type="file" name="image" id="" multiple>
-                <!-- 
+               <!--  <input type="file" name="image" id="" multiple>
+                
                 <div class="mb-3">
                     <label class="form-label" for="image">Image Url</label>
                     <input class="form-control" type="text" id="image" name="campground[image]" required>
@@ -44,6 +44,17 @@
                     <textarea class="form-control" type="text" id="description" name="campground[description]" required > </textarea>
                     <div class="valid-feedback">
                         That's right!
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="">Upload Images</label>
+                    <div class="form-control custom-file" >
+                        <input type="file" class="form-control-input" id="image" name="image" multiple>
+                        <label class="form-control-label" for="image">
+                            <span class="form-control-text"></span>
+                            <span class="form-control-button">Choose image(s)...</span>
+                        </label>
                     </div>
                 </div>
 
