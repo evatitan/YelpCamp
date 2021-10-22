@@ -2,7 +2,7 @@
     <div class="row">
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST" novalidate class="validated-form">
+            <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3" >
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" id="title" name="campground[title]" required>
@@ -18,7 +18,10 @@
                         That's right!
                     </div>
                 </div>
-            
+                
+                 <!-- multiple 是为了能够接受多个文件，使用了upload.array-->
+                <input type="file" name="image" id="" multiple>
+                <!-- 
                 <div class="mb-3">
                     <label class="form-label" for="image">Image Url</label>
                     <input class="form-control" type="text" id="image" name="campground[image]" required>
@@ -26,6 +29,7 @@
                         That's right!
                     </div>
                 </div>
+                -->
 
                 <div class="mb-3">
                     <label class="form-label" for="price">Price</label>
