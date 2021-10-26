@@ -1,80 +1,90 @@
+
 <% layout('layouts/bolierplate') %> 
-    <div class="row">
-        <h1 class="text-center">New Campground</h1>
-        <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-                <div class="mb-3" >
-                    <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" id="title" name="campground[title]" required>
-                    <div class="valid-feedback">
-                        That's right!
-                    </div>
+<div class="row">
+    <h1 class="text-center">New Campground</h1>
+    <div class="col-6 offset-3">
+        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+            <div class="mb-3" >
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="campground[title]" required>
+                <div class="valid-feedback">
+                    That's right!
                 </div>
-                <div class="mb-3">
-                    <label class="form-label custom-file-label" for="location">Location</label>
-                    <input class="form-control" type="text" id="location" name="campground[location]" required>
-                    <div class="valid-feedback">
-                        That's right!
-                    </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label custom-file-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="campground[location]" required>
+                <div class="valid-feedback">
+                    That's right!
                 </div>
-                 <!-- multiple 是为了能够接受多个文件，使用了upload.array-->
-                 <!--  <input type="file" name="image" id="" multiple>
-                <div class="mb-3">
-                    <label class="form-label" for="image">Image Url</label>
-                    <input class="form-control" type="text" id="image" name="campground[image]" required>
-                    <div class="valid-feedback">
-                        That's right!
-                    </div>
+            </div>
+
+             <!-- multiple 是为了能够接受多个文件，使用了upload.array-->
+           <!--  <input type="file" name="image" id="" multiple>
+            
+            <div class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="campground[image]" required>
+                <div class="valid-feedback">
+                    That's right!
                 </div>
-                -->
-                <div class="mb-3">
-                    <label class="form-label" for="price">Price</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" aria-label="price-input" placeholder="0.0" name="campground[price]" required>
-                    </div>
-                </div
-                 <div class="mb-3">
-                     <label class="form-label" for="description">Description</label>
-                     <textarea class="form-control" type="text" id="description" name="campground[description]" required > </textarea>
-                     <div class="valid-feedback">
-                         That's right!
-                     </div>
-                 </div>
-                 <div class="mb-3">
-                     <label for="">Upload Images</label>
-                     <div class="form-control custom-file mb-3" >
-                         <input type="file" class="form-control-input" id="image" name="image" multiple>
-                         <label class="form-control-label" for="image">
-                             <span class="form-control-text"></span>
-                             <span class="form-control-button">Choose image(s)...</span>
-                         </label>
-                     </div>
-                 </div>
-                <div class="mb-3">
-                    <button class="btn btn-success" >Add Campground</button>
+            </div>
+            -->
+
+            <div class="mb-3">
+                <label class="form-label" for="price">Price</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" aria-label="price-input" placeholder="0.0" name="campground[price]" required>
                 </div>
-                <div>
-                    <a href="/campgrounds/">All Campgrounds</a>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="campground[description]" required > </textarea>
+                <div class="valid-feedback">
+                    That's right!
                 </div>
-            </form>
-        </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="">Upload Images</label>
+                <div class="form-control custom-file" >
+                    <input type="file" class="form-control-input" id="image" name="image" multiple>
+                    <label class="form-control-label" for="image">
+                        <span class="form-control-text"></span>
+                        <span class="form-control-button">Choose image(s)...</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-success" >Add Campground</button>
+            </div>
+            
+            <div>
+                <a href="/campgrounds/">All Campgrounds</a>
+            </div>
+        </form>
     </div>
+</div>
+
 <script>
 // Bootstrap  form validation
 (function () {
-  'use strict'
-  const forms = document.querySelectorAll('.validated-form')
-  Array.from(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-      }, false)
-    })
+'use strict'
+const forms = document.querySelectorAll('.validated-form')
+Array.from(forms)
+.forEach(function (form) {
+  form.addEventListener('submit', function (event) {
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    form.classList.add('was-validated')
+  }, false)
+})
 })()
 </script>
+
