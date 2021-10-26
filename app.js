@@ -1,8 +1,9 @@
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
-}
+//if (process.env.NODE_ENV !== 'production') {
+//	require('dotenv').config();
+//}
+require('dotenv').config();
 
-console.log(process.env.SECRET);
+//console.log(process.env.SECRET);
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -10,6 +11,7 @@ const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 
 //用于服务端也能准确无误的接受新创建和更改后的cambground，如果信息不完整，将会抛出错误。见post新创建， serve side validation with Joi
 const Joi = require('joi');
@@ -58,13 +60,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 const sessionConfig = {
+	name: 'session',
 	secret: 'thisshouldbebettersecret!',
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
+		//httpOnly: true,用于防止XSS
 		httpOnly: true,
+		//secure: true,
 		expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
 		maxAge: 1000 * 60 * 60 * 24 * 7
 	}
@@ -80,7 +86,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
 	//console.log(req.session);
-	console.log(req.query);
+	//console.log(req.query);
 	res.locals.currentUser = req.user;
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');

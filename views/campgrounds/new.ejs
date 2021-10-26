@@ -1,7 +1,7 @@
 <% layout('layouts/bolierplate') %> 
     <div class="row">
         <h1 class="text-center">New Campground</h1>
-        <div class="col-md-6 offset-md-3">
+        <div class="col-6 offset-3">
             <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3" >
                     <label class="form-label" for="title">Title</label>
@@ -19,7 +19,6 @@
                 </div>
                  <!-- multiple 是为了能够接受多个文件，使用了upload.array-->
                  <!--  <input type="file" name="image" id="" multiple>
-                
                 <div class="mb-3">
                     <label class="form-label" for="image">Image Url</label>
                     <input class="form-control" type="text" id="image" name="campground[image]" required>
@@ -44,7 +43,7 @@
                  </div>
                  <div class="mb-3">
                      <label for="">Upload Images</label>
-                     <div class="form-control custom-file" >
+                     <div class="form-control custom-file mb-3" >
                          <input type="file" class="form-control-input" id="image" name="image" multiple>
                          <label class="form-control-label" for="image">
                              <span class="form-control-text"></span>
@@ -55,14 +54,12 @@
                 <div class="mb-3">
                     <button class="btn btn-success" >Add Campground</button>
                 </div>
-                
                 <div>
                     <a href="/campgrounds/">All Campgrounds</a>
                 </div>
             </form>
         </div>
     </div>
-
 <script>
 // Bootstrap  form validation
 (function () {
