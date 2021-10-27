@@ -1,8 +1,7 @@
-//if (process.env.NODE_ENV !== 'production') {
-//	require('dotenv').config();
-//}
-require('dotenv').config();
-
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
+//require('dotenv').config();
 //console.log(process.env.SECRET);
 const express = require('express');
 const path = require('path');
@@ -26,6 +25,11 @@ const UserRoutes = require('./routes/users');
 
 const campgroundsRoutes = require('./routes/campgrounds');
 const reviewsRoutes = require('./routes/reviews');
+const MongoDBStore = require('connect-mongo');
+//const MongoStore = require('connect-mongo');
+const dbUrl = 'mongoose://localhost:27017/yelp-camp';
+//const dbUrl = process.env.DB_URL;
+//'mongodb://localhost:27017/yelp-camp'
 
 //mongoose.connect('mongoose://localhost:27017/yelp-camp', {
 //	useNewUrlParser: true,
@@ -35,7 +39,7 @@ const reviewsRoutes = require('./routes/reviews');
 //});
 
 mongoose
-	.connect('mongodb://localhost:27017/yelp-camp')
+	.connect(dbUrl)
 	.then(() => {
 		console.log('Connection open');
 	})
@@ -62,7 +66,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 app.use(helmet({ contentSecurityPolicy: false }));
 
+const store = new MongoDBStore({
+	url: dbUrl,
+	secret: 'thisshouldbebettersecret!',
+	touchAfter: 24 * 60 * 60
+});
+
+store.on('error', function(e) {
+	console.log('session store error', e);
+});
+
 const sessionConfig = {
+	store,
 	name: 'session',
 	secret: 'thisshouldbebettersecret!',
 	resave: false,
@@ -115,6 +130,7 @@ app.use((err, req, res, next) => {
 	//res.status(statusCode).send(message);
 });
 
+//const port = process.env.PORT || 3000
 app.listen(3000, () => {
-	console.log('Listen on port 3000');
+	console.log(`Serving on port`);
 });
