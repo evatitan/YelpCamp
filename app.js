@@ -78,7 +78,7 @@ store.on('error', function(e) {
 const sessionConfig = {
 	store: store,
 	name: 'session',
-	secret: 'thisshouldbebettersecret!',
+	secret: process.env.SECRET || 'thisshouldbebettersecret!',
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
@@ -129,7 +129,7 @@ app.use((err, req, res, next) => {
 	//res.status(statusCode).send(message);
 });
 
-//const port = process.env.PORT || 3000
-app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
 	console.log(`Serving on port`);
 });
