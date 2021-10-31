@@ -1,11 +1,11 @@
-const sanitizeHtml = require('sanitize-html');
 const BaseJoi = require('joi');
+const sanitizeHtml = require('sanitize-html');
 
 const extension = (joi) => ({
 	type: 'string',
 	base: joi.string(),
 	messages: {
-		'string.escapeHTML': '{{#label}} must not inclue HTML!'
+		'string.escapeHTML': '{{#label}} must not include HTML!'
 	},
 	rules: {
 		escapeHTML: {
@@ -36,7 +36,7 @@ module.exports.campgroundSchema = Joi.object({
 
 module.exports.reviewSchema = Joi.object({
 	review: Joi.object({
-		rating: Joi.string().required().min(1).max(5),
+		rating: Joi.number().required().min(1).max(5),
 		body: Joi.string().required().escapeHTML()
 	}).required()
 });

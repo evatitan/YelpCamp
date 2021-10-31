@@ -1,7 +1,7 @@
-if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
-}
-//require('dotenv').config();
+//if (process.env.NODE_ENV !== 'production') {
+//	require('dotenv').config();
+//}
+require('dotenv').config();
 //console.log(process.env.SECRET);
 const express = require('express');
 const path = require('path');
@@ -25,13 +25,13 @@ const UserRoutes = require('./routes/users');
 
 const campgroundsRoutes = require('./routes/campgrounds');
 const reviewsRoutes = require('./routes/reviews');
-const MongoDBStore = require('connect-mongo');
+const MongoStore = require('connect-mongo');
 //const MongoStore = require('connect-mongo');
-const dbUrl = 'mongoose://localhost:27017/yelp-camp';
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 //const dbUrl = process.env.DB_URL;
 //'mongodb://localhost:27017/yelp-camp'
 
-//mongoose.connect('mongoose://localhost:27017/yelp-camp', {
+//mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 //	useNewUrlParser: true,
 //	useCreateIndex: true,
 //	useUnifiedTopology: true
@@ -63,12 +63,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(mongoSanitize());
+app.use(mongoSanitize({ replaceWith: '' }));
 app.use(helmet({ contentSecurityPolicy: false }));
 
-const store = new MongoDBStore({
-	url: dbUrl,
-	secret: 'thisshouldbebettersecret!',
+const store = MongoStore.create({
+	mongoUrl: dbUrl,
 	touchAfter: 24 * 60 * 60
 });
 
@@ -77,7 +76,7 @@ store.on('error', function(e) {
 });
 
 const sessionConfig = {
-	store,
+	store: store,
 	name: 'session',
 	secret: 'thisshouldbebettersecret!',
 	resave: false,
