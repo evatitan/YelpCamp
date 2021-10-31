@@ -15,7 +15,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 //创建一个schema midlleware 以便多处可以使用,其他地方只需要插入这个函数名称即可。
 module.exports.validateCampground = (req, res, next) => {
 	const { error } = campgroundSchema.validate(req.body);
-	console.log(req.body);
+	//console.log(req.body);
 	if (error) {
 		const msg = error.detalis.map((el) => el.message).join(',');
 		throw new ExpressError(msg, 400);
